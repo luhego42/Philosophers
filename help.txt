@@ -1,0 +1,29 @@
+Dans le fichier routine :
+}
+	ft_print // (if all philo alive "mutex")
+	{
+		print ft_time_passed
+		print philo id
+		print philo_action
+	}
+	faire 3 fonctions "philo_action"
+	{
+		- philo_eating
+			- gerer mutex lock et unlock "des fourchettes";
+			- sleep "usleep"
+			- print eat
+		- philo_sleeping (if eat=finish)
+			- sleep "usleep"
+			- print sleep
+		- philo_thinking (if philo cannot eat or philo eat=finish sleep=finish)
+			- print thinking
+	}
+}
+Dans utils.c
+{
+	faire 1 fonction
+	{
+		ft_time_passed // check la difference de temos entre le temps actuel - le temps depuis lequel est lancé la simulation
+		check man gettimeofday
+	}
+}

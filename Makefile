@@ -1,12 +1,15 @@
 NAME	=	philo
 
 SRC		=	main.c \
+			lst_utils.c \
+			utils.c \
+			routine.c
 
 OBJ		=	$(SRC:.c=.o)
 
 CC		=	clang
 
-CFLAGS	=	-Wall -Wextra -Werror
+CFLAGS	=	-g -Wall -Wextra -Werror
 
 all		:	$(NAME)
 
