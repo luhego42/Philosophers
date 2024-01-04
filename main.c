@@ -6,7 +6,7 @@
 /*   By: luhego <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 14:36:23 by luhego            #+#    #+#             */
-/*   Updated: 2024/01/03 18:54:12 by luhego           ###   ########.fr       */
+/*   Updated: 2024/01/04 19:48:27 by luhego           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,14 @@ static void	fill_arg(t_args *args, char	**argv)
 		printf("pas d'fourchette pas d'pastas\n");
 		exit(0);
 	}
+	pthread_mutex_init(&args->is_dead);
 }
 
 static void	init_struct_var(t_philo **philo, t_args *args)
 {
 	int	i;
 	t_philo	*new;
-
+	
 	i = 1;
 	new = 0;
 	while (i <= args->nb_forks)
@@ -42,6 +43,7 @@ static void	init_struct_var(t_philo **philo, t_args *args)
 		new->next = 0;
 		new->philo_id = i;
 		new->args = args;
+		pthread_mutex_init(&philo->fork);
 		lstadd_back(philo, new);
 		i++;
 	}
@@ -63,6 +65,7 @@ void	print_struct_var(t_philo *philo)
 	}
 }
 */
+/*
 void	*routine(void *ptr)
 {
 	t_philo	*philo;
@@ -72,12 +75,13 @@ void	*routine(void *ptr)
 //	print_struct_var(philo);
 	return (ptr);
 }
-
+*/
 int	main(int argc, char **argv)
 {
 	t_args	args;
 	t_philo	*philo;
 	t_philo	*tmp;
+	pthread_mutex_t	*tmp_fork;
 
 	philo = 0;
 	tmp = 0;
@@ -86,8 +90,15 @@ int	main(int argc, char **argv)
 	fill_arg(&args, argv);
 	init_struct_var(&philo, &args);
 	tmp = philo;
+	gettimeofday(&args.tv, 0);
+	printf("time of prog launch = %ld\n", args.tv.tv_sec);
+	tmp_fork = &philo->fork;
 	while (philo)
 	{
+		if (philo->next)
+			philo->rfork = philo->next->fork;
+		else
+			philo->rfork = tmp_fork;
 		if(pthread_create(&philo->thread, 0, routine, philo))
 			perror("Error creating thread\n");
 		philo = philo->next;
