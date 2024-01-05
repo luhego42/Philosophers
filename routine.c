@@ -6,44 +6,38 @@
 /*   By: luhego <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 18:49:57 by luhego            #+#    #+#             */
-/*   Updated: 2024/01/04 19:55:56 by luhego           ###   ########.fr       */
+/*   Updated: 2024/01/05 19:50:28 by luhego           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-/*
-void	ft_print_cycle()
+
+void	ft_print(t_philo *philo, char *str)
 {
-	while (no_one_is_dead() == 0)
-	{
-		time passed = ft_time_passed();
-		printf("time : %i", time_passed);
-		printf("philo : %i", philo->philo_id);
-		philo_eating();
-		philo_sleeeping();
-		philo_thinking();
-	}
+	ft_init_actual_time(philo->args);
+	printf("%ld %i %s\n", philo->args->actual_time, philo->philo_id, str);
 }
-*/
 
 void	philo_eating(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->fork);
 	pthread_mutex_lock(philo->rfork);
-	printf("I'm eating miom\n");
+	ft_print(philo, "Is eating\n");
+	usleep(1000000);
 	pthread_mutex_unlock(&philo->fork);
 	pthread_mutex_unlock(philo->rfork);
 	
 }
 
-void	philo_sleeping(void) // print
+void	philo_sleeping(t_philo *philo)
 {
-	printf("I'm sleeping ronk\n");
+	ft_print(philo, "Is sleeping zZzZzZ\n");
+	usleep(1000000);
 }
 
-void	philo_thinking(void) // print
+void	philo_thinking(t_philo *philo)
 {
-	printf("I'm thinking not too much\n");
+	ft_print(philo ,"Is Thinking\n");
 }
 
 void	*routine(void *ptr)
@@ -55,9 +49,9 @@ void	*routine(void *ptr)
 		usleep(5000);
 	printf("philo %d\n", philo->philo_id);
 	philo_eating(philo);
-	philo_sleeping();
-	pthread_mutex_unlock(&philo->args->mutex);
-	philo_thinking();
+	philo_sleeping(philo);
+	pthread_mutex_unlock(&philo->args->is_dead);
+	philo_thinking(philo);
 //	print_struct_var(philo);
 	return (ptr);
 }

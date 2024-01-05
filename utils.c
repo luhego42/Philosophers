@@ -1,14 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: luhego <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 17:11:07 by luhego            #+#    #+#             */
-/*   Updated: 2022/10/04 18:13:00 by luhego           ###   ########.fr       */
+/*   Updated: 2024/01/05 19:50:16 by luhego           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "philo.h"
+
+void	ft_init_actual_time(t_args *args)
+{
+	gettimeofday(&args->tv, 0);
+	args->actual_time = (args->tv.tv_sec * 1000) + (args->tv.tv_usec / 1000);
+	args->actual_time = (args->actual_time - args->start) / 1000;
+}
 
 int	ft_atoi(const char *nptr)
 {
