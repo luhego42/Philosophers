@@ -6,7 +6,7 @@
 /*   By: luhego <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 14:36:23 by luhego            #+#    #+#             */
-/*   Updated: 2024/01/05 19:50:20 by luhego           ###   ########.fr       */
+/*   Updated: 2024/01/12 17:43:33 by luhego           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,11 @@ static void	init_struct_var(t_philo **philo, t_args *args)
 		i++;
 	}
 }
-/*
+
 void	print_struct_var(t_philo *philo)
 {
-	printf("nb_forks = %i\n", args->nb_forks);
-	printf("death_time = %i\n", args->death_time);
+	printf("nb_forks = %i\n", philo->args->nb_forks);
+	printf("death_time = %ld\n", philo->args->death_time);
 	printf("eat_time = %i\n", philo->args->eat_time);
 	printf("sleep_time = %i\n", philo->args->sleep_time);
 	if (philo->args->nb_meal != 0)
@@ -64,18 +64,7 @@ void	print_struct_var(t_philo *philo)
 		philo = philo->next;
 	}
 }
-*/
-/*
-void	*routine(void *ptr)
-{
-	t_philo	*philo;
 
-	philo = (t_philo *)ptr;
-	printf("philo id = %d\n", philo->philo_id);
-//	print_struct_var(philo);
-	return (ptr);
-}
-*/
 int	main(int argc, char **argv)
 {
 	t_args	args;
@@ -90,6 +79,7 @@ int	main(int argc, char **argv)
 	fill_arg(&args, argv);
 	init_struct_var(&philo, &args);
 	tmp = philo;
+	print_struct_var(philo);
 	gettimeofday(&args.tv, 0);
 	args.start = (args.tv.tv_sec * 1000) + (args.tv.tv_usec / 1000);
 	printf("time of prog launch = %ld\n", args.tv.tv_sec);
@@ -114,8 +104,5 @@ int	main(int argc, char **argv)
 		philo = philo->next;
 	}
 	lst_clear(&tmp);
-/*	if (pthread_create(philo.thread, 0, routine(t_args), &args))
-		perror("Error creating thread>\n");
-	pthread_join(philo.thread, 0);*/
 	return (0);
 }
