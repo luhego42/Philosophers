@@ -6,7 +6,7 @@
 /*   By: luhego <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 14:36:23 by luhego            #+#    #+#             */
-/*   Updated: 2024/01/12 17:43:33 by luhego           ###   ########.fr       */
+/*   Updated: 2024/01/15 18:22:08 by luhego           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ static void	init_struct_var(t_philo **philo, t_args *args)
 		new = malloc(sizeof(t_philo));
 		new->next = 0;
 		new->philo_id = i;
+		new->meal_taken = 0;
 		new->args = args;
 		pthread_mutex_init(&new->fork, 0);
 		lstadd_back(philo, new);
@@ -54,7 +55,7 @@ void	print_struct_var(t_philo *philo)
 	printf("nb_forks = %i\n", philo->args->nb_forks);
 	printf("death_time = %ld\n", philo->args->death_time);
 	printf("eat_time = %i\n", philo->args->eat_time);
-	printf("sleep_time = %i\n", philo->args->sleep_time);
+	printf("sleep_time = %zu\n", philo->args->sleep_time);
 	if (philo->args->nb_meal != 0)
 		printf("meal taken\n");
 	printf("nb_meal = %i\n", philo->args->nb_meal);

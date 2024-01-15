@@ -6,15 +6,28 @@
 /*   By: luhego <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 17:11:07 by luhego            #+#    #+#             */
-/*   Updated: 2024/01/13 17:44:46 by luhego           ###   ########.fr       */
+/*   Updated: 2024/01/15 18:26:24 by luhego           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	ft_usleep(int sleep_time)
+void	ft_usleep(t_philo *philo, size_t sleep_time)
 {
-	usleep(sleep_time * 1000);
+	ft_init_actual_time(philo->args);
+
+	while (philo->args->actual_time < sleep_time && philo->args->kill != 1)
+	{
+		pthread_mutex_lock(&philo->args->is_dead);
+		if (philo->args->kill != 1)
+		{
+			pthread_mutex_unlock(&philo->args->is_dead);
+			break ;
+		}
+		pthread_mutex_unlock(&philo->args->is_dead);
+		usleep(50);
+		ft_init_actual_time(philo->args);
+	}
 }
 
 void	ft_init_actual_time(t_args *args)
