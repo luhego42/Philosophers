@@ -6,7 +6,7 @@
 /*   By: luhego <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 14:36:23 by luhego            #+#    #+#             */
-/*   Updated: 2024/01/28 18:16:29 by luhego           ###   ########.fr       */
+/*   Updated: 2024/01/29 18:57:04 by luhego           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ static void	fill_arg(t_args *args, char	**argv)
 static void	init_struct_var(t_philo **philo, t_args *args)
 {
 	t_philo	*new;
-	int	i;
-	
+	int		i;
+
 	i = 1;
 	new = 0;
 	while (i <= args->nb_forks)
@@ -49,6 +49,11 @@ static void	init_struct_var(t_philo **philo, t_args *args)
 		lstadd_back(philo, new);
 		i++;
 	}
+}
+
+void	launch_thread(t_philo *philo)
+{
+	
 }
 
 int	main(int argc, char **argv)
@@ -65,7 +70,7 @@ int	main(int argc, char **argv)
 		return (0);
 	fill_arg(&args, argv);
 	init_struct_var(&philo, &args);
-	philo->args->kill = 0; // tesst
+	philo->args->kill = 0;
 	tmp = philo;
 	gettimeofday(&tv, 0);
 	args.start = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
@@ -76,7 +81,7 @@ int	main(int argc, char **argv)
 			philo->rfork = &philo->next->fork;
 		else
 			philo->rfork = tmp_fork;
-		if(pthread_create(&philo->thread, 0, routine, philo))
+		if (pthread_create(&philo->thread, 0, routine, philo))
 			perror("Error, pthread_create\n");
 		philo = philo->next;
 	}

@@ -6,7 +6,7 @@
 /*   By: luhego <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 18:49:57 by luhego            #+#    #+#             */
-/*   Updated: 2024/01/28 19:42:48 by luhego           ###   ########.fr       */
+/*   Updated: 2024/01/29 17:36:01 by luhego           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	philo_eating(t_philo *philo)
 	{
 		pthread_mutex_unlock(&philo->args->is_eating);
 		return (-1);
-	}	
+	}
 	pthread_mutex_unlock(&philo->args->is_eating);
 	return (1);
 }
@@ -48,7 +48,7 @@ int	philo_sleeping(t_philo *philo)
 
 int	philo_thinking(t_philo *philo)
 {
-	if (ft_print(philo ,"Is Thinking\n") == -1)
+	if (ft_print(philo, "Is Thinking\n") == -1)
 		return (-1);
 	return (1);
 }
