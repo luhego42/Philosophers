@@ -6,7 +6,7 @@
 /*   By: luhego <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 14:36:23 by luhego            #+#    #+#             */
-/*   Updated: 2024/01/15 18:22:08 by luhego           ###   ########.fr       */
+/*   Updated: 2024/01/28 18:16:29 by luhego           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,26 +14,27 @@
 
 static void	fill_arg(t_args *args, char	**argv)
 {
+	args->nb_forks = atoi(argv[1]);
 	args->death_time = atoi(argv[2]);
-	args->sleep_time = atoi(argv[4]);
 	args->eat_time = atoi(argv[3]);
+	args->sleep_time = atoi(argv[4]);
 	if (argv[5])
 		args->nb_meal = atoi(argv[5]);
 	else
 		args->nb_meal = -1;
-	args->nb_forks = atoi(argv[1]);
 	if (args->nb_forks <= 0)
 	{
-		printf("pas d'fourchette pas d'pastas\n");
+		printf("Error, must have at least 1 philo\n");
 		exit(0);
 	}
 	pthread_mutex_init(&args->is_dead, 0);
+	pthread_mutex_init(&args->is_eating, 0);
 }
 
 static void	init_struct_var(t_philo **philo, t_args *args)
 {
-	int	i;
 	t_philo	*new;
+	int	i;
 	
 	i = 1;
 	new = 0;
@@ -50,28 +51,13 @@ static void	init_struct_var(t_philo **philo, t_args *args)
 	}
 }
 
-void	print_struct_var(t_philo *philo)
-{
-	printf("nb_forks = %i\n", philo->args->nb_forks);
-	printf("death_time = %ld\n", philo->args->death_time);
-	printf("eat_time = %i\n", philo->args->eat_time);
-	printf("sleep_time = %zu\n", philo->args->sleep_time);
-	if (philo->args->nb_meal != 0)
-		printf("meal taken\n");
-	printf("nb_meal = %i\n", philo->args->nb_meal);
-	while (philo)
-	{
-		printf("philo_id = %i\n", philo->philo_id);
-		philo = philo->next;
-	}
-}
-
 int	main(int argc, char **argv)
 {
-	t_args	args;
-	t_philo	*philo;
-	t_philo	*tmp;
+	t_args			args;
+	t_philo			*philo;
+	t_philo			*tmp;
 	pthread_mutex_t	*tmp_fork;
+	struct timeval	tv;
 
 	philo = 0;
 	tmp = 0;
@@ -79,13 +65,10 @@ int	main(int argc, char **argv)
 		return (0);
 	fill_arg(&args, argv);
 	init_struct_var(&philo, &args);
+	philo->args->kill = 0; // tesst
 	tmp = philo;
-	print_struct_var(philo);
-	gettimeofday(&args.tv, 0);
-	args.start = (args.tv.tv_sec * 1000) + (args.tv.tv_usec / 1000);
-	printf("time of prog launch = %ld\n", args.tv.tv_sec);
-	printf("time of prog launch = %ld\n", args.tv.tv_usec);
-	printf("time of start = %ld\n", args.start);
+	gettimeofday(&tv, 0);
+	args.start = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 	tmp_fork = &philo->fork;
 	while (philo)
 	{
@@ -94,14 +77,14 @@ int	main(int argc, char **argv)
 		else
 			philo->rfork = tmp_fork;
 		if(pthread_create(&philo->thread, 0, routine, philo))
-			perror("Error creating thread\n");
+			perror("Error, pthread_create\n");
 		philo = philo->next;
 	}
 	philo = tmp;
 	while (philo)
 	{
 		if (pthread_join(philo->thread, 0) != 0)
-			perror("Error pthread_create\n");
+			perror("Error, pthread_join\n");
 		philo = philo->next;
 	}
 	lst_clear(&tmp);

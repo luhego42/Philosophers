@@ -6,7 +6,7 @@
 /*   By: luhego <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 17:11:07 by luhego            #+#    #+#             */
-/*   Updated: 2024/01/15 18:26:24 by luhego           ###   ########.fr       */
+/*   Updated: 2024/01/23 20:40:11 by luhego           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,34 @@
 
 void	ft_usleep(t_philo *philo, size_t sleep_time)
 {
-	ft_init_actual_time(philo->args);
+	size_t	time;
+	size_t	time_passed;
 
-	while (philo->args->actual_time < sleep_time && philo->args->kill != 1)
+	time = ft_init_actual_time(philo->args);
+	time_passed = time;
+	while (time_passed - time < sleep_time)
 	{
 		pthread_mutex_lock(&philo->args->is_dead);
-		if (philo->args->kill != 1)
+		if (philo->args->kill == 1)
 		{
 			pthread_mutex_unlock(&philo->args->is_dead);
 			break ;
 		}
 		pthread_mutex_unlock(&philo->args->is_dead);
 		usleep(50);
-		ft_init_actual_time(philo->args);
+		time_passed = ft_init_actual_time(philo->args);
 	}
 }
 
-void	ft_init_actual_time(t_args *args)
+size_t	ft_init_actual_time(t_args *args)
 {
-	gettimeofday(&args->tv, 0);
-	args->actual_time = (args->tv.tv_sec * 1000) + (args->tv.tv_usec / 1000);
-	args->actual_time = (args->actual_time - args->start);
+	size_t			time;
+	struct timeval	tv;
+
+	gettimeofday(&tv, 0);
+	time = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+	time = time - args->start;
+	return (time);
 }
 
 int	ft_atoi(const char *nptr)
