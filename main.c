@@ -6,18 +6,20 @@
 /*   By: luhego <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 14:36:23 by luhego            #+#    #+#             */
-/*   Updated: 2024/01/29 18:57:04 by luhego           ###   ########.fr       */
+/*   Updated: 2024/02/11 22:22:09 by luhego           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static void	fill_arg(t_args *args, char	**argv)
+static int	fill_arg(t_args *args, char	**argv)
 {
+	args->stop = 0;
 	args->nb_forks = atoi(argv[1]);
 	args->death_time = atoi(argv[2]);
 	args->eat_time = atoi(argv[3]);
 	args->sleep_time = atoi(argv[4]);
+	args->philo_eat = 0;
 	if (argv[5])
 		args->nb_meal = atoi(argv[5]);
 	else
@@ -25,10 +27,18 @@ static void	fill_arg(t_args *args, char	**argv)
 	if (args->nb_forks <= 0)
 	{
 		printf("Error, must have at least 1 philo\n");
-		exit(0);
+		return (-1);
+	}
+	if (args->sleep_time <= 0 || args->eat_time <= 0 || args->death_time <= 0 \
+		|| (args->nb_meal <= 0 && argv[5]))
+	{
+		printf("Invalid parameters.\n");
+		return (-1);
 	}
 	pthread_mutex_init(&args->is_dead, 0);
+	pthread_mutex_init(&args->is_writing, 0);
 	pthread_mutex_init(&args->is_eating, 0);
+	return (0);
 }
 
 static void	init_struct_var(t_philo **philo, t_args *args)
@@ -45,53 +55,55 @@ static void	init_struct_var(t_philo **philo, t_args *args)
 		new->philo_id = i;
 		new->meal_taken = 0;
 		new->args = args;
-		pthread_mutex_init(&new->fork, 0);
+		pthread_mutex_init(&new->left_fork, 0);
 		lstadd_back(philo, new);
 		i++;
 	}
 }
 
-void	launch_thread(t_philo *philo)
+static void	launch_thread(t_philo *philo)
 {
-	
+	t_philo			*tmp;
+	pthread_mutex_t	*tmp_fork;
+
+	tmp = philo;
+	tmp_fork = &philo->left_fork;
+	while (philo)
+	{
+		if (philo->next)
+			philo->right_fork = &philo->next->left_fork;
+		else
+			philo->right_fork = tmp_fork;
+		pthread_create(&philo->thread, 0, routine, philo);
+		philo = philo->next;
+	}
+	philo = tmp;
+	while (philo)
+	{
+		pthread_join(philo->thread, 0);
+		philo = philo->next;
+	}
+	lst_clear(&tmp);
 }
 
 int	main(int argc, char **argv)
 {
 	t_args			args;
 	t_philo			*philo;
-	t_philo			*tmp;
-	pthread_mutex_t	*tmp_fork;
 	struct timeval	tv;
 
 	philo = 0;
-	tmp = 0;
 	if (argc != 5 && argc != 6)
+	{
+		printf("Invalid paramaters.\n");
 		return (0);
-	fill_arg(&args, argv);
+	}
+	if (fill_arg(&args, argv) == -1)
+		return (0);
 	init_struct_var(&philo, &args);
 	philo->args->kill = 0;
-	tmp = philo;
 	gettimeofday(&tv, 0);
 	args.start = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
-	tmp_fork = &philo->fork;
-	while (philo)
-	{
-		if (philo->next)
-			philo->rfork = &philo->next->fork;
-		else
-			philo->rfork = tmp_fork;
-		if (pthread_create(&philo->thread, 0, routine, philo))
-			perror("Error, pthread_create\n");
-		philo = philo->next;
-	}
-	philo = tmp;
-	while (philo)
-	{
-		if (pthread_join(philo->thread, 0) != 0)
-			perror("Error, pthread_join\n");
-		philo = philo->next;
-	}
-	lst_clear(&tmp);
+	launch_thread(philo);
 	return (0);
 }

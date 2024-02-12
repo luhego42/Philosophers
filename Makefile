@@ -3,18 +3,20 @@ NAME	=	philo
 SRC		=	main.c \
 			lst_utils.c \
 			utils.c \
-			routine.c
+			routine.c \
+			behavior.c \
+			monitor.c
 
 OBJ		=	$(SRC:.c=.o)
 
 CC		=	clang
 
-CFLAGS	=	-g -Wall -Wextra -Werror
+CFLAGS	=	-Wall -Wextra -Werror
 
 all		:	$(NAME)
 
 $(NAME)	:	$(OBJ)
-				clang $(CFLAGS) $(OBJ) -o $(NAME)
+				clang $(CFLAGS) -g $(OBJ) -o $(NAME)
 
 clean	:	
 			rm -f $(OBJ)
