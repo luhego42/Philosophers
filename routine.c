@@ -6,7 +6,7 @@
 /*   By: luhego <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 18:49:57 by luhego            #+#    #+#             */
-/*   Updated: 2024/02/12 20:20:34 by luhego           ###   ########.fr       */
+/*   Updated: 2024/02/12 22:32:48 by luhego           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static void	*philo_routine(void *ptr)
 
 	philo = (t_philo *) ptr;
 	philo->last_meal = 0;
-	while (!philo->args->kill && !philo->args->stop)
+	while (!check_death(philo, 0))
 	{
 		pthread_create(&death_thread, NULL, monitor_death, ptr);
 		if (eat_meal(philo) == -1)

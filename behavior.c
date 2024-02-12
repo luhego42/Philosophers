@@ -6,7 +6,7 @@
 /*   By: luhego <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 18:49:57 by luhego            #+#    #+#             */
-/*   Updated: 2024/02/12 22:10:09 by luhego           ###   ########.fr       */
+/*   Updated: 2024/02/12 22:28:13 by luhego           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	has_finished_eating(t_philo *philo)
 	if (philo->meal_taken == philo->args->nb_meal)
 	{
 		philo->args->philo_eat += 1;
-		pthread_mutex_lock(&philo->args->is_dead);
+		pthread_mutex_lock(&philo->args->is_stop);
 		if (philo->args->philo_eat == philo->args->nb_forks)
 		{
 			philo->args->stop = 1;
