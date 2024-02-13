@@ -6,7 +6,7 @@
 /*   By: luhego <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 18:49:57 by luhego            #+#    #+#             */
-/*   Updated: 2024/02/12 22:50:33 by luhego           ###   ########.fr       */
+/*   Updated: 2024/02/13 00:26:10 by luhego           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	*monitor_death(void *phi)
 	if (!check_death(philo, 0) && (is_dead >= philo->args->death_time))
 	{
 		ft_print_status(philo, "Is dead");
-		philo->args->kill = 1;
+		check_death(philo, 1);
 		pthread_mutex_unlock(&philo->args->is_stop);
 		pthread_mutex_unlock(&philo->args->is_eating);
 		return (NULL);

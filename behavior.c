@@ -6,7 +6,7 @@
 /*   By: luhego <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 18:49:57 by luhego            #+#    #+#             */
-/*   Updated: 2024/02/12 22:28:13 by luhego           ###   ########.fr       */
+/*   Updated: 2024/02/13 00:26:12 by luhego           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	has_finished_eating(t_philo *philo)
 		pthread_mutex_lock(&philo->args->is_stop);
 		if (philo->args->philo_eat == philo->args->nb_forks)
 		{
-			philo->args->stop = 1;
+			check_death(philo, 1);
 			pthread_mutex_unlock(&philo->args->is_stop);
 			pthread_mutex_unlock(&philo->args->is_eating);
 			return (1);

@@ -6,7 +6,7 @@
 /*   By: luhego <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 14:36:23 by luhego            #+#    #+#             */
-/*   Updated: 2024/02/11 22:22:09 by luhego           ###   ########.fr       */
+/*   Updated: 2024/02/13 01:28:50 by luhego           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,19 @@
 
 static int	fill_arg(t_args *args, char	**argv)
 {
+	size_t	prout;
+
+	prout = -1;
+	printf("%ld\n", prout);
 	args->stop = 0;
-	args->nb_forks = atoi(argv[1]);
-	args->death_time = atoi(argv[2]);
-	args->eat_time = atoi(argv[3]);
-	args->sleep_time = atoi(argv[4]);
+	args->kill = 0;
 	args->philo_eat = 0;
+	args->nb_forks = ft_atoi(argv[1]);
+	args->death_time = ft_atoi(argv[2]);
+	args->eat_time = ft_atoi(argv[3]);
+	args->sleep_time = ft_atoi(argv[4]);
 	if (argv[5])
-		args->nb_meal = atoi(argv[5]);
+		args->nb_meal = ft_atoi(argv[5]);
 	else
 		args->nb_meal = -1;
 	if (args->nb_forks <= 0)
@@ -29,16 +34,21 @@ static int	fill_arg(t_args *args, char	**argv)
 		printf("Error, must have at least 1 philo\n");
 		return (-1);
 	}
-	if (args->sleep_time <= 0 || args->eat_time <= 0 || args->death_time <= 0 \
-		|| (args->nb_meal <= 0 && argv[5]))
+	printf("arg[1] = %i\narg[2] = %ld\narg[3] = %i\narg[4] = %ld\narg[5] = %i\n", args->nb_forks, args->death_time, args->eat_time, args->sleep_time, args->nb_meal);
+	if (args->sleep_time < 1 || args->eat_time < 1 || args->death_time < 1 || (argv[5] && args->nb_meal < 1))
 	{
 		printf("Invalid parameters.\n");
 		return (-1);
 	}
+	return (0);
+}
+
+static void	init_mutex(t_args *args)
+{	
+	pthread_mutex_init(&args->is_stop, 0);
 	pthread_mutex_init(&args->is_dead, 0);
 	pthread_mutex_init(&args->is_writing, 0);
 	pthread_mutex_init(&args->is_eating, 0);
-	return (0);
 }
 
 static void	init_struct_var(t_philo **philo, t_args *args)
@@ -101,7 +111,7 @@ int	main(int argc, char **argv)
 	if (fill_arg(&args, argv) == -1)
 		return (0);
 	init_struct_var(&philo, &args);
-	philo->args->kill = 0;
+	init_mutex(&args);
 	gettimeofday(&tv, 0);
 	args.start = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
 	launch_thread(philo);

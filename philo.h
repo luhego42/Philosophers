@@ -6,7 +6,7 @@
 /*   By: luhego <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 15:33:37 by luhego            #+#    #+#             */
-/*   Updated: 2024/02/12 22:26:56 by luhego           ###   ########.fr       */
+/*   Updated: 2024/02/13 00:26:18 by luhego           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,6 @@ void	ft_print_status(t_philo *philo, char *status);
 void	single_fork_scenario(t_philo *philo);
 int		has_finished_eating(t_philo *philo);
 int		check_death(t_philo *philo, int nb);
+int		ft_atoi(const char *nptr);
 
 #endif
