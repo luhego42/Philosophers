@@ -6,7 +6,7 @@
 /*   By: luhego <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/17 14:36:23 by luhego            #+#    #+#             */
-/*   Updated: 2024/02/13 01:28:50 by luhego           ###   ########.fr       */
+/*   Updated: 2024/02/18 21:10:09 by luhego           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,6 @@
 
 static int	fill_arg(t_args *args, char	**argv)
 {
-	size_t	prout;
-
-	prout = -1;
-	printf("%ld\n", prout);
 	args->stop = 0;
 	args->kill = 0;
 	args->philo_eat = 0;
@@ -34,8 +30,8 @@ static int	fill_arg(t_args *args, char	**argv)
 		printf("Error, must have at least 1 philo\n");
 		return (-1);
 	}
-	printf("arg[1] = %i\narg[2] = %ld\narg[3] = %i\narg[4] = %ld\narg[5] = %i\n", args->nb_forks, args->death_time, args->eat_time, args->sleep_time, args->nb_meal);
-	if (args->sleep_time < 1 || args->eat_time < 1 || args->death_time < 1 || (argv[5] && args->nb_meal < 1))
+	if (args->sleep_time < 1 || args->eat_time < 1 || args->death_time < 1 \
+		|| (argv[5] && args->nb_meal < 1))
 	{
 		printf("Invalid parameters.\n");
 		return (-1);
@@ -44,7 +40,7 @@ static int	fill_arg(t_args *args, char	**argv)
 }
 
 static void	init_mutex(t_args *args)
-{	
+{
 	pthread_mutex_init(&args->is_stop, 0);
 	pthread_mutex_init(&args->is_dead, 0);
 	pthread_mutex_init(&args->is_writing, 0);

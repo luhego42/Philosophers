@@ -6,7 +6,7 @@
 /*   By: luhego <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 18:49:57 by luhego            #+#    #+#             */
-/*   Updated: 2024/02/12 22:32:48 by luhego           ###   ########.fr       */
+/*   Updated: 2024/02/18 21:22:46 by luhego           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,19 @@ static void	*philo_routine(void *ptr)
 	{
 		pthread_create(&death_thread, NULL, monitor_death, ptr);
 		if (eat_meal(philo) == -1)
+		{
+			pthread_join(death_thread, 0);
 			break ;
+		}
 		ft_print_status(philo, "Is sleeping");
 		ft_usleep(philo, philo->args->sleep_time);
 		ft_print_status(philo, "Is thinking");
-		pthread_detach(death_thread);
 		if (has_finished_eating(philo))
+		{
+			pthread_join(death_thread, 0);
 			break ;
+		}
+		pthread_join(death_thread, 0);
 	}
 	return (0);
 }

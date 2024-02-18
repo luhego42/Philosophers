@@ -6,7 +6,7 @@
 /*   By: luhego <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/31 15:33:37 by luhego            #+#    #+#             */
-/*   Updated: 2024/02/13 00:26:18 by luhego           ###   ########.fr       */
+/*   Updated: 2024/02/13 20:09:56 by luhego           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@
 
 typedef struct s_args
 {
-	size_t			death_time;
-	size_t			sleep_time;
 	size_t			start;
+	int				death_time;
+	int				sleep_time;
 	int				eat_time;
 	int				nb_meal;
 	int				nb_forks;
